@@ -1,0 +1,75 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+
+
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Post content-->
+        <article>
+            <!-- Post header-->
+            <header class="mb-4">
+                <!-- Post title-->
+                <h1 class="fw-bolder mb-1">{{article.title}}</h1>
+                <!-- Post meta content-->
+                <div class="text-muted fst-italic mb-2">Posted on {{article.created_date}} by {{article.author}}</div>
+            </header>
+            <!-- Preview image figure-->
+            {% if article.article_image %}
+                <figure class="mb-4"><img class="img-fluid rounded" src="{{article.article_image.url}}" alt="..." /></figure>
+            {% endif %}
+            
+            <!-- Post content-->
+            <hr>
+            <section class="mb-5">
+                <p class="fs-5 mb-4">
+                    {{article.content|safe}}
+                </p>
+            </section>
+            <hr>
+        </article>
+        <h3>Comments</h4>
+        <hr>
+        {% if comments %}
+            {% for comment in comments %}
+                <div class="d-flex mb-3">
+                    <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
+                    <div class="ms-3">
+                        <div class="fw-bold">{{comment.comment_author}}</div>
+                            {{comment.comment_date}} <br>
+                            {{comment.comment_content}}
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class ="alert alert-danger">
+                Nobody has commented to this Article
+            </div>
+        {% endif %}
+
+        <div class="card my-4">
+            <h5 class="card-header">Add a Comment:</h5>
+            <div class="card-body">
+                <form method = "POST" action = "{% url 'article:comment' article.id %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="formGroupExampleInput">Your Name</label>
+                        <input name ="comment_author" type="text" class="form-control" id="formGroupExampleInput" placeholder="Please enter your name">
+                      </div>
+                    <div class="form-group">
+                        <label for="formGroupExampleInput">Comment</label>
+                        <textarea name ="comment_content" class="form-control" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-danger">Comment!</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+{% endblock %}
